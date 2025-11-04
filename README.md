@@ -10,6 +10,8 @@ Overview
 
 This Ansible role is designed to simplify and enhance the flexibility of PostgreSQL management.
 
+This role uses only ansible.builtin.* ansible modules.
+
 Supported PostgreSQL versions (from PostgreSQL repository):
 - PostgreSQL 18
 - PostgreSQL 17

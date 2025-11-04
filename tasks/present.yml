@@ -39,6 +39,11 @@
   vars:
     pg_package: "dnf-plugins-core"
 
+- name: "Ensuring acl is installed"
+  ansible.builtin.include_tasks: package_present.yml
+  vars:
+    pg_package: "acl"
+
 - name: "Ensuring epel-release is installed"
   ansible.builtin.include_tasks: package_present.yml
   vars:

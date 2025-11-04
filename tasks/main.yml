@@ -69,6 +69,10 @@
 ###############################################################################
 
 - name: "STATE: Ensure PostgreSQL installations are present"
+  ansible.builtin.include_tasks: install.yml
+  when: state == 'install'
+
+- name: "STATE: Ensure PostgreSQL installations are present"
   ansible.builtin.include_tasks: present.yml
   when: state == 'present'
 
