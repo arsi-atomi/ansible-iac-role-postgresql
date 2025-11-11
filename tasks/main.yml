@@ -108,6 +108,12 @@
     pg_state: "{{ state }}"
   when: state == 'instances_stopped'
 
+- name: "STATE: Ensure PostgreSQL instances are restarted"
+  ansible.builtin.include_tasks: loop_instances.yml
+  vars:
+    pg_state: "{{ state }}"
+  when: state == 'instances_restarted'
+
 - name: "STATE: Ensure PostgreSQL database users are present"
   ansible.builtin.include_tasks: loop_instances.yml
   vars:

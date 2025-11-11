@@ -30,6 +30,7 @@ Create PostgreSQL instances     | instances_present   |
 Remove PostgreSQL instances     | instances_absent    |
 Start PostgreSQL instances      | instances_started   |
 Stop PostgreSQL instances       | instances_stopped   |
+Restart PostgreSQL instances    | instances_restarted |
 Create databases                | databases_present   |
 Remove databases                | databases_absent    |
 Create database users           | users_present       |
