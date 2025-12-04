@@ -47,7 +47,6 @@
 
 - name: "Ensuring instance is absent"
   become: true
-  become_user: "{{ pg_os_user }}"
   ansible.builtin.command: "{{ pg_cli_command }}"
   register: my_output
   failed_when: my_output.rc != 0
