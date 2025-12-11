@@ -20,7 +20,7 @@ servers:
                       address: 10.89.0.1/32
                       type: host
                       method: scram-sha-256
-              users:
+              roles:
                 - name: myuser
                   password: jepujee!
                   createdb: true

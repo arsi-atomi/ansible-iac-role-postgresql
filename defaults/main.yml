@@ -48,8 +48,15 @@ iac_ansible_report_tasks_path: "/root/ansible-report-tasks.log"
 # INSTALLATION
 ###############################################################################
 
+# Directory where package creates postgres user home directory
 pg_default_dir: "/var/lib/pgsql"
+
+# Directory where you want to physical install your postgres user home directory
+pg_real_dir: "{{ pg_default_dir }}"
+
+# Directory where you want to bind your postgres user home directory (usually to default dir)
 pg_bind_dir: "{{ pg_default_dir }}"
+
 pg_systemd_service_dir: "/usr/lib/systemd/system"
 pg_log_directory: "/var/log/pgsql"
 

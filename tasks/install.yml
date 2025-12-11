@@ -20,10 +20,10 @@
   vars:
     pg_state: "instances_started"
 
-- name: "STATE: Ensure PostgreSQL users are present"
+- name: "STATE: Ensure PostgreSQL roles are present"
   ansible.builtin.include_tasks: loop_instances.yml
   vars:
-    pg_state: "users_present"
+    pg_state: "roles_present"
 
 - name: "STATE: Ensure PostgreSQL databases are present"
   ansible.builtin.include_tasks: loop_instances.yml

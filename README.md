@@ -42,8 +42,8 @@ Requirements
 - Operating system (tested on)
   - Fedora Linux 42
   - Fedora Linux 41
-  - Red Hat Enterprise Linux 8
   - Red Hat Enterprise Linux 9
+  - Red Hat Enterprise Linux 8
   - Rocky Linux 10
   - Rocky Linux 9
   - Rocky Linux 8
@@ -70,7 +70,7 @@ changes, separating the what from the how.
 Usage
 =====
 
-how to run playbook with inventory
+How to run playbook with inventory
 ----------------------------------
 
 Use playbook and inventory examples to create your own playbook and run command below.
