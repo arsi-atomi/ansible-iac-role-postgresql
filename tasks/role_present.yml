@@ -98,23 +98,10 @@
   vars:
     iac_log_write: "Created role {{ pg_version }}/{{ pg_instance }}/{{ pg_db_role }}"
 
-- name: "Assembling psql command"
-  ansible.builtin.set_fact:
-    pg_cli_command: >-
-      /usr/pgsql-{{ pg_version }}/bin/psql postgres -p {{ pg_port }} -c "GRANT \"{{ pg_role_record.in_role }}\" TO \"{{ pg_db_role }}\""
-  when: pg_role_record.in_role is defined
-
-- name: "Ensuring roles are granted to role"
-  become: true
-  become_user: "{{ pg_os_user }}"
-  ansible.builtin.command: "{{ pg_cli_command }}"
-  register: cli_changed
-  changed_when: "cli_changed.rc == 0"
-  failed_when: false
-  when: pg_role_record.in_role is defined
-
-- name: "Writing log"
-  ansible.builtin.include_tasks: log_write.yml
-  vars:
-    iac_log_write: "Granted roles {{ pg_role_record.in_role }} to {{ pg_version }}/{{ pg_instance }}/{{ pg_db_role }}"
-  when: pg_role_record.in_role is defined
+- name: "Looping through in_roles"
+  ansible.builtin.include_tasks: "in_role_present.yml"
+  loop: "{{ pg_role_record.in_roles }}"
+  loop_control:
+    loop_var: pg_grant_role
+  when:
+    - (pg_role_record.in_roles | default([])) | length > 0

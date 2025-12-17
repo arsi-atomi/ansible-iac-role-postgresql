@@ -1,0 +1,49 @@
+---
+###############################################################################
+#
+# in_role_present.yml
+#
+# @author Arsi Atomi
+#
+###############################################################################
+
+###############################################################################
+# SETTING VARIABLES
+###############################################################################
+
+- name: "Setting what variables are configured"
+  ansible.builtin.set_fact:
+    pg_db_role: "{{ pg_role_record.name }}"
+  when: pg_role_record is defined
+
+- name: "Checking if required variables are defined"
+  ansible.builtin.assert:
+    that:
+      - pg_db_role is defined
+      - pg_grant_role is defined
+      - pg_instance is defined
+      - pg_port is defined
+      - pg_version is defined
+    fail_msg: "All tests did not pass"
+
+###############################################################################
+# GRANTING ROLE
+###############################################################################
+
+- name: "Assembling psql command"
+  ansible.builtin.set_fact:
+    pg_cli_command: >-
+      /usr/pgsql-{{ pg_version }}/bin/psql postgres -p {{ pg_port }} -c "GRANT \"{{ pg_grant_role }}\" TO \"{{ pg_db_role }}\""
+
+- name: "Ensuring roles are granted to role"
+  become: true
+  become_user: "{{ pg_os_user }}"
+  ansible.builtin.command: "{{ pg_cli_command }}"
+  register: cli_changed
+  changed_when: "cli_changed.rc == 0"
+  failed_when: false
+
+- name: "Writing log"
+  ansible.builtin.include_tasks: log_write.yml
+  vars:
+    iac_log_write: "Granted role {{ pg_grant_role }} to {{ pg_version }}/{{ pg_instance }}/{{ pg_db_role }}"
