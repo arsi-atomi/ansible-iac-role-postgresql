@@ -21,6 +21,7 @@
     pg_max_connections: "{{ pg_instance_record.1.configuration.max_connections | default(pg_default_max_connections) }}"
     pg_port: "{{ pg_instance_record.1.configuration.port | default(pg_default_port) }}"
     pg_profile: "{{ pg_instance_record.1.configuration_profile | default(omit) }}"
+    pg_maprole: "{{ pg_instance_record.1.maprole | default([]) }}"
     pg_security: "{{ pg_instance_record.1.security_profile | default('off') }}"
     pg_version: "{{ pg_instance_record.0.version }}"
   when: pg_instance_record is defined
@@ -256,6 +257,28 @@
     mode: "0600"
   loop: "{{ pg_global_access }}"
   when: pg_global_access is defined
+
+###############################################################################
+# ENSURING DEFAULT PG_IDENT.CONF IS DELETED AND NEW WRITTEN
+###############################################################################
+
+- name: "Removing old pg_ident.conf"
+  ansible.builtin.file:
+    path: "{{ pg_bind_dir }}/{{ pg_version }}/{{ pg_instance }}/pg_ident.conf"
+    state: absent
+
+- name: "Ensure pg_ident.conf access rules are present"
+  ansible.builtin.lineinfile:
+    path: "{{ pg_bind_dir }}/{{ pg_version }}/{{ pg_instance }}/pg_ident.conf"
+    line: "{{ item.mapname }} {{ item.system_username }} {{ item.pg_username }}"
+    state: present
+    create: true
+    insertafter: EOF
+    owner: "{{ pg_os_user }}"
+    group: "{{ pg_os_group }}"
+    mode: "0600"
+  loop: "{{ pg_maprole }}"
+  when: pg_maprole is defined
 
 ###############################################################################
 # ENSURING LOG DIRECTORY EXISTS
