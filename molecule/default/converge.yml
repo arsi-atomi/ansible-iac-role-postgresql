@@ -11,6 +11,24 @@
     iac_blueprint:
       postgresql:
         - version: "16"
+          directories:
+            - path: /tmp/pgsql16
+              owner: root
+              group: root
+              mode: "0750"
+          files:
+            - path: /tmp/pgsql16/example.txt
+              content: "molecule\n"
+              owner: root
+              group: root
+              mode: "0640"
+          cron:
+            - name: pg16_heartbeat
+              user: root
+              minute: "0"
+              hour: "3"
+              job: "/bin/true"
+              cron_file: pg16_heartbeat
           instances:
             - name: main16
               roles:
@@ -33,6 +51,24 @@
               configuration:
                 max_connections: 50
         - version: "17"
+          directories:
+            - path: /tmp/pgsql17
+              owner: root
+              group: root
+              mode: "0750"
+          files:
+            - path: /tmp/pgsql17/example.txt
+              content: "molecule\n"
+              owner: root
+              group: root
+              mode: "0640"
+          cron:
+            - name: pg17_heartbeat
+              user: root
+              minute: "0"
+              hour: "3"
+              job: "/bin/true"
+              cron_file: pg17_heartbeat
           instances:
             - name: main17
               roles:
@@ -56,6 +92,24 @@
               configuration:
                 max_connections: 50
         - version: "18"
+          directories:
+            - path: /tmp/pgsql18
+              owner: root
+              group: root
+              mode: "0750"
+          files:
+            - path: /tmp/pgsql18/example.txt
+              content: "molecule\n"
+              owner: root
+              group: root
+              mode: "0640"
+          cron:
+            - name: pg18_heartbeat
+              user: root
+              minute: "0"
+              hour: "3"
+              job: "/bin/true"
+              cron_file: pg18_heartbeat
           instances:
             - name: main18
               roles:

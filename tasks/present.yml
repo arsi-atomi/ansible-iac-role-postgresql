@@ -100,3 +100,30 @@
   when:
     - pg_real_dir is defined
     - pg_real_dir != pg_default_dir
+
+###############################################################################
+# ENSURING FILESYSTEM CONFIGURATION
+###############################################################################
+
+- name: "Ensuring filesystem configuration is present"
+  ansible.builtin.include_tasks: fs_present.yml
+  when: iac_blueprint.postgresql | selectattr('directories', 'defined') | list | length > 0
+  vars:
+    iac_fs_directories: >-
+      {{ iac_blueprint.postgresql | map(attribute='directories')
+         | select('defined') | list | flatten }}
+    iac_fs_files: >-
+      {{ iac_blueprint.postgresql | map(attribute='files')
+         | select('defined') | list | flatten }}
+
+###############################################################################
+# ENSURING CRONJOB CONFIGURATION
+###############################################################################
+
+- name: "Ensuring cronjob configuration is present"
+  ansible.builtin.include_tasks: cron_present.yml
+  when: iac_blueprint.postgresql | selectattr('cron', 'defined') | list | length > 0
+  vars:
+    iac_cron: >-
+      {{ iac_blueprint.postgresql | map(attribute='cron')
+         | select('defined') | list | flatten }}

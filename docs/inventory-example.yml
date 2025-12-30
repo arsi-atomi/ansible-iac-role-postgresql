@@ -6,6 +6,24 @@ servers:
     iac_blueprint:
       postgresql:
         - version: 17
+          directories:
+            - path: /var/lib/pgsql/backups
+              owner: postgres
+              group: postgres
+              mode: "0750"
+          files:
+            - path: /etc/pgsql/backup.env
+              content: "PGUSER=postgres\n"
+              owner: root
+              group: root
+              mode: "0640"
+          cron:
+            - name: pg_backup
+              user: postgres
+              minute: "0"
+              hour: "2"
+              job: "/usr/local/bin/pg_backup"
+              cron_file: pg_backup
           instances:
             - name: data
               databases:

@@ -145,6 +145,25 @@ Top-level structure:
 iac_blueprint:
   postgresql:
     - version: <major version number>          # e.g. 17
+      directories:                             # optional filesystem directories
+        - path: <path>
+          owner: <owner>
+          group: <group>
+          mode: <mode>
+      files:                                   # optional files with inline content
+        - path: <path>
+          content: <content>
+          owner: <owner>
+          group: <group>
+          mode: <mode>
+      cron:                                    # optional cronjobs
+        - name: <name>
+          job: <command>
+          user: <user>
+          minute: <minute>
+          hour: <hour>
+          weekday: <weekday>
+          cron_file: <cron_file>
       instances:
         - name: <instance name>                # must be unique on host
           port: <custom port>                  # default: version-specific PostgreSQL default
@@ -202,3 +221,30 @@ iac_blueprint:
       instances:
         - name: data
 ```
+
+Optional filesystem and cron example
+
+```yaml
+iac_blueprint:
+  postgresql:
+    - version: 17
+      directories:
+        - path: /var/lib/pgsql/backups
+          owner: postgres
+          group: postgres
+          mode: "0750"
+      files:
+        - path: /etc/pgsql/backup.env
+          content: "PGUSER=postgres\n"
+          owner: root
+          group: root
+          mode: "0640"
+      cron:
+        - name: pg_backup
+          user: postgres
+          minute: "0"
+          hour: "2"
+          job: "/usr/local/bin/pg_backup"
+          cron_file: pg_backup
+      instances:
+        - name: data
