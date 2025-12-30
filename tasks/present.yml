@@ -107,23 +107,17 @@
 
 - name: "Ensuring filesystem configuration is present"
   ansible.builtin.include_tasks: fs_present.yml
-  when: iac_blueprint.postgresql | selectattr('directories', 'defined') | list | length > 0
+  when: iac_blueprint.podman.directories is defined
   vars:
-    iac_fs_directories: >-
-      {{ iac_blueprint.postgresql | map(attribute='directories')
-         | select('defined') | list | flatten }}
-    iac_fs_files: >-
-      {{ iac_blueprint.postgresql | map(attribute='files')
-         | select('defined') | list | flatten }}
+    iac_fs_directories: "{{ iac_blueprint.podman.directories | default([]) }}"
+    iac_fs_files: "{{ iac_blueprint.podman.files | default([]) }}"
 
 ###############################################################################
 # ENSURING CRONJOB CONFIGURATION
 ###############################################################################
 
-- name: "Ensuring cronjob configuration is present"
+- name: "Ensuring filesystem configuration is present"
   ansible.builtin.include_tasks: cron_present.yml
-  when: iac_blueprint.postgresql | selectattr('cron', 'defined') | list | length > 0
+  when: iac_blueprint.podman.cron is defined
   vars:
-    iac_cron: >-
-      {{ iac_blueprint.postgresql | map(attribute='cron')
-         | select('defined') | list | flatten }}
+    iac_cron: "{{ iac_blueprint.podman.cron | default([]) }}"
