@@ -15,7 +15,7 @@
   ansible.builtin.set_fact:
     pg_extension: "{{ pg_extension_record.name | default(omit) }}"
     pg_instance: "{{ pg_instance_record.1.name }}"
-    pg_version: "{{ pg_instance_record.0.version }}"
+    pg_version: "{{ pg_instance_record.0.version | string }}"
     pg_port: "{{ pg_instance_record.1.configuration.port | default(pg_default_port) }}"
 
 - name: "Checking if required variables are defined"
@@ -52,6 +52,6 @@
   when:
     - pg_extension is defined
     - pg_extension == ext.name
-    - pg_version in ['18', '17', '16']
-    - (ansible_distribution in ['RedHat', 'Rocky'] and ansible_distribution_major_version in ['10', '9', '8']) or
-      (ansible_distribution in ['Fedora'] and ansible_distribution_major_version in ['41','42'])
+    - pg_version in ["16", "17", "18"]
+    - (ansible_facts["distribution"] in ['RedHat', 'Rocky'] and ansible_facts["distribution_major_version"] in ['10', '9', '8']) or
+      (ansible_facts["distribution"] in ['Fedora'] and ansible_facts["distribution_major_version"] in ['41','42'])

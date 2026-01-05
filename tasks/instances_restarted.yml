@@ -14,7 +14,7 @@
 - name: "Setting what variables are configured"
   ansible.builtin.set_fact:
     pg_instance: "{{ pg_instance_record.1.name }}"
-    pg_version: "{{ pg_instance_record.0.version }}"
+    pg_version: "{{ pg_instance_record.0.version | string }}"
   when: pg_instance_record is defined
 
 - name: "Checking if required variables are defined"

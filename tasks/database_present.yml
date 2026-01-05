@@ -47,33 +47,33 @@
   failed_when: database_exists.rc != 0
 
 - name: "Preparing CREATE DATABASE command if database does not exist"
-  when: database_exists.stdout != '1'
   block:
     - name: "Setting optional attributes for CREATE DATABASE"
       ansible.builtin.set_fact:
         pg_database_owner_str: >-
-          {{ 'OWNER {{ pg_database_record.owner }}' if (pg_database_record.owner is defined) else '' }}
+          {{ ('OWNER "' ~ pg_database_record.owner ~ '"') if (pg_database_record.owner is defined) else '' }}
         pg_database_encoding_str: >-
-          {{ 'ENCODING {{ pg_database_record.encoding }}' if (pg_database_record.encoding is defined) else '' }}
+          {{ ('ENCODING "' ~ pg_database_record.encoding ~ '"') if (pg_database_record.encoding is defined) else '' }}
     - name: "Assembling full CREATE DATABASE psql command"
       ansible.builtin.set_fact:
         pg_cli_command: >-
           /usr/pgsql-{{ pg_version }}/bin/psql postgres -p {{ pg_port }}
           -c "CREATE DATABASE \"{{ pg_database }}\" {{ pg_database_owner_str }}
           {{ pg_database_encoding_str }}"
+  when: database_exists.stdout != '1'
 
 - name: "Preparing ALTER DATABASE command if database does not exist"
-  when: database_exists.stdout == '1'
   block:
     - name: "Setting optional attributes for ALTER DATABASE"
       ansible.builtin.set_fact:
         pg_database_owner_str: >-
-          {{ 'OWNER TO {{ pg_database_record.owner }}' if (pg_database_record.owner is defined) else '' }}
+          {{ ('OWNER TO "' ~ pg_database_record.owner ~ '"') if (pg_database_record.owner is defined) else '' }}
     - name: "Assembling full ALTER DATABASE psql command"
       ansible.builtin.set_fact:
         pg_cli_command: >-
           /usr/pgsql-{{ pg_version }}/bin/psql postgres -p {{ pg_port }}
           -c "ALTER DATABASE \"{{ pg_database }}\" {{ pg_database_owner_str }}"
+  when: database_exists.stdout == '1'
 
 - name: "Ensuring database is present with correct parameters"
   become: true

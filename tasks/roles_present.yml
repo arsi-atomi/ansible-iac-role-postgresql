@@ -15,7 +15,7 @@
   ansible.builtin.set_fact:
     pg_roles: "{{ pg_instance_record.1.roles | default([]) }}"
     pg_instance: "{{ pg_instance_record.1.name }}"
-    pg_version: "{{ pg_instance_record.0.version }}"
+    pg_version: "{{ pg_instance_record.0.version | string }}"
     pg_port: "{{ pg_instance_record.1.configuration.port | default(pg_default_port) }}"
   when: pg_instance_record is defined
 

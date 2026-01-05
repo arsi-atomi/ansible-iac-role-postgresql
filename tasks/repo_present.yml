@@ -52,7 +52,7 @@
     http_proxy: "{{ http_proxy }}"
     https_proxy: "{{ https_proxy }}"
     no_proxy: "{{ no_proxy }}"
-  when: "'postgresql' + pg_version|string + '-server' not in sw_packages.stdout_lines and (ansible_distribution == 'RedHat' or ansible_distribution == 'Rocky')"
+  when: "'postgresql' + pg_version|string + '-server' not in sw_packages.stdout_lines and (ansible_facts['distribution'] in ['RedHat', 'Rocky'])"
 
 - name: "Ensuring repository RPM key for Fedora is present if distribution is Fedora and packages were not available"
   ansible.builtin.rpm_key:
@@ -62,19 +62,19 @@
     http_proxy: "{{ http_proxy }}"
     https_proxy: "{{ https_proxy }}"
     no_proxy: "{{ no_proxy }}"
-  when: "'postgresql' + pg_version|string + '-server' not in sw_packages.stdout_lines and ansible_distribution == 'Fedora'"
+  when: "'postgresql' + pg_version|string + '-server' not in sw_packages.stdout_lines and ansible_facts['distribution'] == 'Fedora'"
 
 - name: "Ensuring PostgreSQL repository is present if distribution is Fedora and packages were not available"
   ansible.builtin.include_tasks: package_present.yml
   vars:
-    pg_package: "https://download.postgresql.org/pub/repos/yum/reporpms/F-{{ ansible_distribution_major_version }}-x86_64/pgdg-fedora-repo-latest.noarch.rpm"
-  when: "'postgresql' + pg_version|string + '-server' not in sw_packages.stdout_lines and ansible_distribution == 'Fedora'"
+    pg_package: "https://download.postgresql.org/pub/repos/yum/reporpms/F-{{ ansible_facts['distribution_major_version'] }}-x86_64/pgdg-fedora-repo-latest.noarch.rpm"
+  when: "'postgresql' + pg_version|string + '-server' not in sw_packages.stdout_lines and ansible_facts['distribution'] == 'Fedora'"
 
 - name: "Ensuring PostgreSQL repository is present if distribution is RedHat and packages were not available"
   ansible.builtin.include_tasks: package_present.yml
   vars:
-    pg_package: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-{{ ansible_distribution_major_version }}-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
-  when: "'postgresql' + pg_version|string + '-server' not in sw_packages.stdout_lines and ansible_distribution in ['RedHat', 'Rocky']"
+    pg_package: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-{{ ansible_facts['distribution_major_version'] }}-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+  when: "'postgresql' + pg_version|string + '-server' not in sw_packages.stdout_lines and ansible_facts['distribution'] in ['RedHat', 'Rocky']"
 
 ###############################################################################
 # ENSURING PROXY IS CONFIGURED TO REPOSITORY IF NEEDED
@@ -100,22 +100,22 @@
 - name: "Setting variables"
   ansible.builtin.set_fact:
     pg_cli_command: "dnf config-manager --set-enabled pgdg{{ pg_version }}"
-  when: ansible_distribution in ['RedHat', 'Rocky'] and ansible_distribution_major_version in ['8', '9', '10']
+  when: ansible_facts["distribution"] in ['RedHat', 'Rocky'] and ansible_facts["distribution_major_version"] in ['8', '9', '10']
 
 - name: "Setting variables"
   ansible.builtin.set_fact:
     pg_cli_command: "dnf config-manager --set-enabled powertools"
-  when: ansible_distribution in ['Rocky'] and ansible_distribution_major_version in ['8']
+  when: ansible_facts["distribution"] in ['Rocky'] and ansible_facts["distribution_major_version"] in ['8']
 
 - name: "Setting variables"
   ansible.builtin.set_fact:
     pg_cli_command: "dnf config-manager --set-enabled crb"
-  when: ansible_distribution in ['Rocky'] and ansible_distribution_major_version in ['9', '10']
+  when: ansible_facts["distribution"] in ['Rocky'] and ansible_facts["distribution_major_version"] in ['9', '10']
 
 - name: "Setting variables"
   ansible.builtin.set_fact:
     pg_cli_command: "dnf config-manager setopt pgdg{{ pg_version }}.enabled=1"
-  when: ansible_distribution == 'Fedora' and ansible_distribution_major_version in ['41', '42']
+  when: ansible_facts["distribution"] == 'Fedora' and ansible_facts["distribution_major_version"] in ['41', '42']
 
 - name: "Ensuring repositories are present"
   ansible.builtin.command: >
@@ -136,20 +136,20 @@
 - name: "Setting variables"
   ansible.builtin.set_fact:
     pg_cli_command: "dnf config-manager setopt fedora.exclude=postgresql* updates.exclude=postgresql*"
-  when: ansible_distribution == 'Fedora'
+  when: ansible_facts["distribution"] == 'Fedora'
 
 - name: "Setting variables"
   ansible.builtin.set_fact:
     pg_cli_command: "dnf -qy module disable postgresql"
   when: >
-    ansible_distribution in ['RedHat','Rocky']
-    and ansible_distribution_major_version in ['8','9']
+    ansible_facts["distribution"] in ['RedHat','Rocky']
+    and ansible_facts["distribution_major_version"] in ['8','9']
     and (pg_disable_postgresql_module | bool)
 
 - name: "Setting variables"
   ansible.builtin.set_fact:
     pg_cli_command: "dnf config-manager --setopt='appstream.exclude=postgresql*' --save"
-  when: ansible_distribution in ['RedHat','Rocky'] and ansible_distribution_major_version == '10'
+  when: ansible_facts["distribution"] in ['RedHat','Rocky'] and ansible_facts["distribution_major_version"] == '10'
 
 - name: "Ensuring other postgresql packages are excluded"
   ansible.builtin.command: >

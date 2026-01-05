@@ -49,8 +49,8 @@
   vars:
     pg_package: "epel-release"
   when:
-    - ansible_distribution in ['Rocky']
-    - ansible_distribution_major_version in ['8', '9', '10']
+    - ansible_facts["distribution"] in ['Rocky']
+    - ansible_facts["distribution_major_version"] in ['8', '9', '10']
 
 - name: "Ensuring openssl is installed"
   ansible.builtin.include_tasks: package_present.yml
@@ -61,7 +61,7 @@
   ansible.builtin.include_tasks: package_present.yml
   vars:
     pg_package: "gnupg2"
-  when: ansible_distribution in ['RedHat', 'Rocky'] and ansible_distribution_major_version == '10'
+  when: ansible_facts["distribution"] in ['RedHat', 'Rocky'] and ansible_facts["distribution_major_version"] == '10'
 
 ###############################################################################
 # LOOPING THROUGH POSTGRESQL VERSIONS TO BE INSTALLED

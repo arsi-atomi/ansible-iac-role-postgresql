@@ -14,7 +14,7 @@
 - name: "Setting what variables are configured"
   ansible.builtin.set_fact:
     pg_instance: "{{ pg_instance_record.1.name }}"
-    pg_version: "{{ pg_instance_record.0.version }}"
+    pg_version: "{{ pg_instance_record.0.version | string }}"
   when: pg_instance_record is defined
 
 - name: "Checking if required variables are defined"
@@ -36,26 +36,12 @@
   ansible.builtin.set_fact:
     pg_service_name: "postgresql-{{ pg_version }}-{{ pg_instance }}.service"
 
-- name: "Gathering service facts"
-  ansible.builtin.service_facts:
-
-- name: "Setting service state"
-  ansible.builtin.set_fact:
-    pg_service_state: "{{ ansible_facts.services[pg_service_name].state | default('unknown') }}"
-
-- name: "Writing log"
-  ansible.builtin.include_tasks: log_write.yml
-  vars:
-    iac_log_write: "Checked service {{ pg_version }}/{{ pg_instance }} was {{ pg_service_state }}"
-
 - name: "Ensuring instance is started"
   ansible.builtin.systemd:
     name: "{{ pg_service_name }}"
     state: started
-  when: pg_service_state == 'stopped'
 
 - name: "Writing log"
   ansible.builtin.include_tasks: log_write.yml
   vars:
-    iac_log_write: "Started service {{ pg_version }}/{{ pg_instance }}"
-  when: pg_service_state == 'stopped'
+    iac_log_write: "Ensured service {{ pg_version }}/{{ pg_instance }} is started"

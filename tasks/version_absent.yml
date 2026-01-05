@@ -30,4 +30,4 @@
 - name: "Ensuring PostgreSQL packages are removed"
   ansible.builtin.include_tasks: package_absent.yml
   vars:
-    pg_package: "postgresql{{ pg_version }}-server,postgresql{{ pg_version }}-contrib"
+    pg_package: "postgresql{{ pg_version }}-server,postgresql{{ pg_version }}-contrib,postgresql{{ pg_version }}-libs,postgresql{{ pg_version }}"

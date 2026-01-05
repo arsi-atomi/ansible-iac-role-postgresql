@@ -23,7 +23,7 @@
     pg_profile: "{{ pg_instance_record.1.configuration_profile | default(omit) }}"
     pg_maprole: "{{ pg_instance_record.1.maprole | default([]) }}"
     pg_security: "{{ pg_instance_record.1.security_profile | default('off') }}"
-    pg_version: "{{ pg_instance_record.0.version }}"
+    pg_version: "{{ pg_instance_record.0.version | string }}"
   when: pg_instance_record is defined
 
 - name: "Setting tuning profile if tuning is defined"

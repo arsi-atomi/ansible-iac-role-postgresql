@@ -10,7 +10,7 @@
     ansible_become_method: su
     iac_blueprint:
       postgresql:
-        - version: "16"
+        - version: 16
           directories:
             - path: /tmp/pgsql16
               owner: root
@@ -50,7 +50,7 @@
                       method: scram-sha-256
               configuration:
                 max_connections: 50
-        - version: "17"
+        - version: 17
           directories:
             - path: /tmp/pgsql17
               owner: root

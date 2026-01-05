@@ -1,6 +1,6 @@
 ANSIBLE-IAC-ROLE-POSTGRESQL
 ===========================
-**COPYRIGHT** 2025 ^(ida|arsi)$ collective  
+**COPYRIGHT** 2026 ^(ida|arsi)$ collective  
 **LICENSE** MIT License [LICENSE](LICENSE)  
 **AUTHORS**
 - Arsi Atomi <arsi@atomi.sh>  
@@ -33,8 +33,8 @@ Stop PostgreSQL instances       | instances_stopped   |
 Restart PostgreSQL instances    | instances_restarted |
 Create databases                | databases_present   |
 Remove databases                | databases_absent    |
-Create database users           | users_present       |
-Remove database users           | users_absent        |
+Create database users           | role_present       |
+Remove database users           | roles_absent        |
 
 Requirements
 ------------

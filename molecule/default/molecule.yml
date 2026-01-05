@@ -6,8 +6,8 @@ driver:
   name: podman
 
 platforms:
-  - name: instance
-    image: registry.access.redhat.com/ubi9/ubi-init
+  - name: instance-idarsi-rl8
+    image: docker.io/idarsi/rockylinux-init:8
     command: /sbin/init
     privileged: true
     pre_build_image: true
@@ -15,8 +15,8 @@ platforms:
     tty: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
-  - name: instance-ubi8
-    image: registry.access.redhat.com/ubi8/ubi-init
+  - name: instance-idarsi-rl9
+    image: docker.io/idarsi/rockylinux-init:9
     command: /sbin/init
     privileged: true
     pre_build_image: true
@@ -24,8 +24,8 @@ platforms:
     tty: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
-  - name: instance-ubi10
-    image: registry.access.redhat.com/ubi10/ubi-init
+  - name: instance-idarsi-rl10
+    image: docker.io/idarsi/rockylinux-init:10
     command: /sbin/init
     privileged: true
     pre_build_image: true
