@@ -107,10 +107,10 @@
 
 - name: "Ensuring filesystem configuration is present"
   ansible.builtin.include_tasks: fs_present.yml
-  when: iac_blueprint.podman.directories is defined
+  when: iac_blueprint.postgresql.directories is defined
   vars:
-    iac_fs_directories: "{{ iac_blueprint.podman.directories | default([]) }}"
-    iac_fs_files: "{{ iac_blueprint.podman.files | default([]) }}"
+    iac_fs_directories: "{{ iac_blueprint.postgresql.directories | default([]) }}"
+    iac_fs_files: "{{ iac_blueprint.postgresql.files | default([]) }}"
 
 ###############################################################################
 # ENSURING CRONJOB CONFIGURATION
@@ -118,6 +118,6 @@
 
 - name: "Ensuring filesystem configuration is present"
   ansible.builtin.include_tasks: cron_present.yml
-  when: iac_blueprint.podman.cron is defined
+  when: iac_blueprint.postgresql.cron is defined
   vars:
-    iac_cron: "{{ iac_blueprint.podman.cron | default([]) }}"
+    iac_cron: "{{ iac_blueprint.postgresql.cron | default([]) }}"
