@@ -49,9 +49,9 @@
     - name: "Setting optional attributes for CREATE ROLE"
       ansible.builtin.set_fact:
         pg_db_role_password_str: >-
-          {{ "PASSWORD '{{ pg_role_record.password }}'" if (pg_role_record.password is defined) else '' }}
+          {{ ("PASSWORD '" ~ pg_role_record.password ~ "'") if (pg_role_record.password is defined) else '' }}
         pg_db_role_encrypted_password_str: >-
-          {{ "ENCRYPTED PASSWORD '{{ pg_role_record.encrypted_password }}'" if (pg_role_record.encrypted_password is defined) else '' }}
+          {{ ("ENCRYPTED PASSWORD '" ~ pg_role_record.encrypted_password ~ "'") if (pg_role_record.encrypted_password is defined) else '' }}
         pg_db_role_createdb_str: >-
           {{ 'CREATEDB' if (pg_role_record.createdb is defined and
           pg_role_record.createdb | bool) else 'NOCREATEDB'
@@ -84,9 +84,9 @@
     - name: "Setting optional attributes for ALTER ROLE"
       ansible.builtin.set_fact:
         pg_db_role_password_str: >-
-          {{ "PASSWORD '{{ pg_role_record.password }}'" if (pg_role_record.password is defined) else '' }}
+          {{ ("PASSWORD '" ~ pg_role_record.password ~ "'") if (pg_role_record.password is defined) else '' }}
         pg_db_role_encrypted_password_str: >-
-          {{ "ENCRYPTED PASSWORD '{{ pg_role_record.encrypted_password }}'" if (pg_role_record.encrypted_password is defined) else '' }}
+          {{ ("ENCRYPTED PASSWORD '" ~ pg_role_record.encrypted_password ~ "'") if (pg_role_record.encrypted_password is defined) else '' }}
         pg_db_role_createdb_str: >-
           {{ 'CREATEDB' if (pg_role_record.createdb is defined and
           pg_role_record.createdb | bool) else 'NOCREATEDB'
@@ -111,6 +111,10 @@
           {{ pg_db_role_encrypted_password_str }} {{ pg_db_role_createdb_str }}
           {{ pg_db_role_createrole_str }} {{ pg_db_role_superuser_str }}
           {{ pg_db_role_login_str }}"
+
+- name: "What?"
+  ansible.builtin.debug:
+    var: pg_cli_command
 
 - name: "Ensuring role is present"
   become: true
