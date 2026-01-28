@@ -37,9 +37,11 @@
     pg_service_name: "postgresql-{{ pg_version }}-{{ pg_instance }}.service"
 
 - name: "Ensuring instance is started"
-  ansible.builtin.systemd:
+  ansible.builtin.systemd_service:
     name: "{{ pg_service_name }}"
     state: started
+    enabled: true
+    masked: false
 
 - name: "Writing log"
   ansible.builtin.include_tasks: log_write.yml

@@ -286,6 +286,7 @@
   ansible.builtin.file:
     path: "{{ pg_bind_dir }}/{{ pg_version }}/{{ pg_instance }}/pg_ident.conf"
     state: absent
+  when: pg_maprole | length > 0
 
 - name: "Ensure pg_ident.conf access rules are present"
   ansible.builtin.lineinfile:
@@ -298,7 +299,7 @@
     group: "{{ pg_os_group }}"
     mode: "0600"
   loop: "{{ pg_maprole }}"
-  when: pg_maprole is defined
+  when: pg_maprole | length > 0
 
 ###############################################################################
 # ENSURING LOG DIRECTORY EXISTS
