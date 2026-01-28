@@ -112,10 +112,6 @@
           {{ pg_db_role_createrole_str }} {{ pg_db_role_superuser_str }}
           {{ pg_db_role_login_str }}"
 
-- name: "What?"
-  ansible.builtin.debug:
-    var: pg_cli_command
-
 - name: "Ensuring role is present"
   become: true
   become_user: "{{ pg_os_user }}"
