@@ -1,7 +1,7 @@
 ---
 ###############################################################################
 #
-# git_present.yml
+# post_installs_present.yml
 #
 # @author Arsi Atomi
 #
@@ -11,23 +11,26 @@
 # SETTING VARIABLES
 ###############################################################################
 
+- name: "Setting what variables are configured"
+  ansible.builtin.set_fact:
+    iac_post_install_jobs: "{{ pg_instance_record.0.post_install.jobs | default([]) }}"
+    pg_version: "{{ pg_instance_record.0.version | string }}"
+  when: pg_instance_record is defined
+
 - name: "Checking if required variables are defined"
   ansible.builtin.assert:
     that:
-      - iac_git_repos is defined
+      - iac_post_install_jobs is defined
+      - pg_version is defined
     fail_msg: "All tests did not pass"
 
 ###############################################################################
-# LOOPING THROUGH DIRECTORIES
+# ENSURING POST_INSTALLS ARE PRESENT
 ###############################################################################
 
-- name: "Looping through git repositories"
-  become_user: "{{ pg_os_user }}"
-  ansible.builtin.git:
-    dest: "{{ item.dest | default(omit) }}"
-    recursive: "{{ item.recursive | default(omit) }}"
-    remote: "{{ item.remote | default(omit) }}"
-    repo: "{{ item.repo | default(omit) }}"
-    single_branch: "{{ item.single_branch | default(omit) }}"
-  loop: "{{ iac_git_repos | default([]) }}"
-  when: iac_git_repos | length > 0
+- name: "Looping through post_install jobs"
+  ansible.builtin.include_tasks: "post_install_present.yml"
+  loop: "{{ iac_post_install_jobs }}"
+  loop_control:
+    loop_var: iac_post_install_job
+  when: iac_post_install_jobs | length > 0

@@ -125,3 +125,9 @@
   vars:
     pg_state: "{{ state }}"
   when: state == 'databases_present'
+
+- name: "STATE: Ensure post_installs are present"
+  ansible.builtin.include_tasks: loop_instances.yml
+  vars:
+    pg_state: "{{ state }}"
+  when: state == 'post_installs_present'
