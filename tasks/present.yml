@@ -57,6 +57,11 @@
   vars:
     pg_package: "openssl"
 
+- name: "Ensuring sed is installed"
+  ansible.builtin.include_tasks: package_present.yml
+  vars:
+    pg_package: "sed"
+
 - name: "Ensuring gpg2 is installed"
   ansible.builtin.include_tasks: package_present.yml
   vars:

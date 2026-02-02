@@ -1,7 +1,7 @@
 ---
 ###############################################################################
 #
-# instances_started.yml
+# post_installs_present.yml
 #
 # @author Arsi Atomi
 #
@@ -13,37 +13,24 @@
 
 - name: "Setting what variables are configured"
   ansible.builtin.set_fact:
-    pg_instance: "{{ pg_instance_record.1.name }}"
+    iac_post_install_jobs: "{{ pg_instance_record.0.post_install.jobs | default([]) }}"
     pg_version: "{{ pg_instance_record.0.version | string }}"
   when: pg_instance_record is defined
 
 - name: "Checking if required variables are defined"
   ansible.builtin.assert:
     that:
-      - pg_encoding is defined
-      - pg_lc_collate is defined
-      - pg_lc_ctype is defined
-      - pg_bind_dir is defined
+      - iac_post_install_jobs is defined
       - pg_version is defined
-      - pg_instance is defined
     fail_msg: "All tests did not pass"
 
 ###############################################################################
-# ENSURING SYSTEMD SERVICE IS STARTED
+# ENSURING POST_INSTALLS ARE PRESENT
 ###############################################################################
 
-- name: "Setting service name"
-  ansible.builtin.set_fact:
-    pg_service_name: "postgresql-{{ pg_version }}-{{ pg_instance }}.service"
-
-- name: "Ensuring instance is started"
-  ansible.builtin.systemd_service:
-    name: "{{ pg_service_name }}"
-    state: started
-    enabled: true
-    masked: false
-
-- name: "Writing log"
-  ansible.builtin.include_tasks: log_write.yml
-  vars:
-    iac_log_write: "Ensured service {{ pg_version }}/{{ pg_instance }} is started"
+- name: "Looping through post_install jobs"
+  ansible.builtin.include_tasks: "post_install_present.yml"
+  loop: "{{ iac_post_install_jobs }}"
+  loop_control:
+    loop_var: iac_post_install_job
+  when: iac_post_install_jobs | length > 0

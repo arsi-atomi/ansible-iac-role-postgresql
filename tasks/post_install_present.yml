@@ -1,0 +1,26 @@
+---
+###############################################################################
+#
+# post_present.yml
+#
+# @author Arsi Atomi
+#
+###############################################################################
+
+###############################################################################
+# SETTING VARIABLES
+###############################################################################
+
+- name: "Checking if required variables are defined"
+  ansible.builtin.assert:
+    that:
+      - iac_post_install_job is defined
+    fail_msg: "All tests did not pass"
+
+###############################################################################
+# LOOPING THROUGH DIRECTORIES
+###############################################################################
+
+- name: "Looping through post install scripts"
+  become_user: "{{ iac_post_install_job.run_as }}"
+  ansible.builtin.shell: "{{ iac_post_install_job.command }}"

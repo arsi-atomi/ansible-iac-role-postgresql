@@ -29,3 +29,8 @@
   ansible.builtin.include_tasks: loop_instances.yml
   vars:
     pg_state: "databases_present"
+
+- name: "STATE: Ensure post_install scripts are run"
+  ansible.builtin.include_tasks: loop_instances.yml
+  vars:
+    pg_state: "post_installs_present"
