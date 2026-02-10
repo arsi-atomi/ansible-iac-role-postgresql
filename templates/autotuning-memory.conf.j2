@@ -1,5 +1,6 @@
 {% if pg_autotuning_memory|lower != 'off' %}
-shared_buffers = {{ (((ansible_facts["memtotal_mb"] / 1024.0) | round | int) * 0.25) | int * 1024 }}MB
+#shared_buffers = {{ (((ansible_facts["memtotal_mb"] / 1024.0) | round | int) * 0.25) | int * 1024 }}MB
+shared_buffers = {{ [ (ansible_facts.memtotal_mb * 0.25) | int, 128 ] | max }}MB
 # Based on max_connections = {{ pg_max_connections }}
 work_mem = {{ ((((ansible_facts["memtotal_mb"] / 1024.0) | round | int) * 0.25) / (pg_max_connections|float) * 1024) | round | int }}MB
 maintenance_work_mem = {{ ((ansible_facts["memtotal_mb"] / 1024.0) | round | int) * 64 }}MB

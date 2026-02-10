@@ -118,7 +118,7 @@
   ansible.builtin.include_tasks: loop_instances.yml
   vars:
     pg_state: "{{ state }}"
-  when: state == 'roless_present'
+  when: state == 'roles_present'
 
 - name: "STATE: Ensure PostgreSQL databases are present"
   ansible.builtin.include_tasks: loop_instances.yml
